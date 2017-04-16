@@ -13,11 +13,11 @@ import java.util.Scanner;
 
 public class AccountManager {
   private final Connection connection;
-  private final List<Processor> processors;
+  private final List<CommandHandler> commandHandlers;
 
   public AccountManager(Connection connection) {
     this.connection = connection;
-    this.processors = loadProcessors();
+    this.commandHandlers = loadCommandHandlers();
   }
 
   public void run(Scanner console) throws Exception {
@@ -31,15 +31,14 @@ public class AccountManager {
   }
 
   private void handleCommand(String command) throws Exception {
-    for (Processor processor : processors) {
-      if (processor.handle(connection, command))
+    for (CommandHandler commandHandler : commandHandlers) {
+      if (commandHandler.handle(connection, command))
         return;
     }
     System.out.println("unknown command");
   }
 
-  private List<Processor> loadProcessors() {
-    // check the enterprise branch for fun and profit
+  private List<CommandHandler> loadCommandHandlers() {
     return Arrays.asList(
         new Signup(),
         new Display(),

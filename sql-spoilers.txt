@@ -11,4 +11,4 @@ withdraw:
 UPDATE accounts SET balance = balance - ? WHERE holder_name = ? AND balance > ?
 
 transfer:
-UPDATE accounts SET balance = balance + ? WHERE holder_name = ? AND balance > ?
+transaction of withdraw+deposit

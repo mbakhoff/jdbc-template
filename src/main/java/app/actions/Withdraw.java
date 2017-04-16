@@ -1,6 +1,6 @@
 package app.actions;
 
-import app.Processor;
+import app.CommandHandler;
 
 import java.sql.Connection;
 
@@ -8,7 +8,7 @@ import java.sql.Connection;
  * Command for withdrawing money from an account
  * Example: "withdraw Märt 10.0"
  */
-public class Withdraw implements Processor {
+public class Withdraw implements CommandHandler {
   @Override
   public boolean handle(Connection conn, String command) throws Exception {
     return false;  // TODO: implement
