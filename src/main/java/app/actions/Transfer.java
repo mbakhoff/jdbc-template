@@ -10,9 +10,11 @@ import java.sql.Connection;
  */
 public class Transfer implements CommandHandler {
   @Override
-  public boolean handle(Connection conn, String command) throws Exception {
+  public void handle(Connection conn, String command) throws Exception {
+    if (!command.startsWith("transfer"))
+      return;
     // this task requires you to use transactions
     // use the return value of executeUpdate to see if the commands were successful
-    return false;  // TODO: implement
+    // TODO: implement
   }
 }

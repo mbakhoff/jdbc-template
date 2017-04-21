@@ -10,7 +10,9 @@ import java.sql.Connection;
  */
 public class Deposit implements CommandHandler {
   @Override
-  public boolean handle(Connection conn, String command) throws Exception {
-    return false;  // TODO: implement
+  public void handle(Connection conn, String command) throws Exception {
+    if (!command.startsWith("deposit"))
+      return;
+    // TODO: implement
   }
 }

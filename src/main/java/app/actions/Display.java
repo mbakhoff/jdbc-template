@@ -10,9 +10,11 @@ import java.sql.Connection;
  */
 public class Display implements CommandHandler {
   @Override
-  public boolean handle(Connection conn, String command) throws Exception {
+  public void handle(Connection conn, String command) throws Exception {
+    if (!command.startsWith("display"))
+      return;
     // use PreparedStatement#executeQuery and the returned ResultSet
     // see ResultSet#next, ResultSet#getString, ResultSet#getBigDecimal
-    return false;  // TODO: implement
+    // TODO: implement
   }
 }

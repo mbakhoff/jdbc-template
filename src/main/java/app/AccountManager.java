@@ -26,16 +26,10 @@ public class AccountManager {
       String command = console.nextLine();
       if (command.equals(":q"))
         break;
-      handleCommand(command);
+      for (CommandHandler commandHandler : commandHandlers) {
+        commandHandler.handle(connection, command);
+      }
     }
-  }
-
-  private void handleCommand(String command) throws Exception {
-    for (CommandHandler commandHandler : commandHandlers) {
-      if (commandHandler.handle(connection, command))
-        return;
-    }
-    System.out.println("unknown command");
   }
 
   private List<CommandHandler> loadCommandHandlers() {
