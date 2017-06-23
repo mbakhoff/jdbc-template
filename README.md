@@ -41,7 +41,12 @@ The database would happily first run the INSERT command and then delete the enti
 Here's a small list of epic fails caused by this bug: http://codecurmudgeon.com/wp/sql-injection-hall-of-shame/
 
 How to avoid SQL injections?
-The easiest way is to let the database driver escape the parameters for you.
+Strings in Java are placed between `"` symbols.
+When a string constant contains the `"` symbol, then it must be escaped by using `\"`.
+Strings in SQL are placed between `'` symbols.
+Escaping strings in SQL works similar to escaping strings in Java - each `'` must be replaced with `''`.
+The database can recognize the special `''` escape sequences and avoid mixing up strings with the rest of the command.
+The easiest way is to let the database driver escape the query parameters for you.
 Use the PreparedStatement parameters like this:
 ```
 void addStudent(Connection conn, String id, String name) throws SQLException {
@@ -52,9 +57,9 @@ void addStudent(Connection conn, String id, String name) throws SQLException {
 }
 ```
 Key points:
+* never add string values directly into a SQL query
 * use the parameter placeholder `?` where a value needs to be inserted
-* set the values using the set methods (note that the indexes start from 1)
-* never use string concatenation to add values into a SQL query (and call out others for doing so)
+* assign the values using the set methods (note that the indexes start from 1)
 
 What's that "transaction support" thing mentioned earlier?
 A transaction is a set of commands that should be executed together atomically.
@@ -74,12 +79,12 @@ private void sellCar(Connection conn, ...) throws SQLException {
   try {
     // delete car from the old owner
     // register car to the new owner
-    conn.commit(); // make changes visible and save to disk
+    conn.commit(); // save all changes changes to disk
   } catch (Exception e) {
     conn.rollback(); // revert all changes from this transaction
     throw e;
   } finally {
-    conn.setAutoCommit(true); // restore what we changed
+    conn.setAutoCommit(true); // restore the default
   }
 }
 ```
