@@ -13,8 +13,9 @@ public class Transfer implements CommandHandler {
   public void handle(Connection conn, String command) throws Exception {
     if (!command.startsWith("transfer"))
       return;
-    // this task requires you to use transactions
-    // use the return value of executeUpdate to see if the commands were successful
+    // REQUIREMENT: use a transaction
+    // HINT: use the return value of executeUpdate to see if the commands were successful
+    // HINT: use "some_column = some_column + ?" in the SQL UPDATE command
     // TODO: implement
   }
 }
