@@ -6,38 +6,37 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Scanner;
 
 public class Main {
 
   public static void main(String[] args) throws Exception {
-    try (Connection connection = getConnection();
-         Scanner console = new Scanner(System.in)) {
-      loadInitialData(connection);
-      new AccountManager(connection).run(console);
+    // start the database by connecting to it
+    try (Connection connection = connectToDatabase()) {
+
+      // run the commands from database-setup.sql
+      // this creates the accounts table and adds some sample data
+      try (Reader setupSql = readFromClasspath("database-setup.sql")) {
+        RunScript.execute(connection, setupSql);
+      }
+
+      // run the interactive command line
+      new AccountManager(connection).runInteractive();
     }
   }
 
-  private static Connection getConnection() throws Exception {
-    // the connection url is a database specific string that describes
-    // how to connect to the database (ip address, username, password, etc)
-    // H2 documentation is here http://h2database.com/html/cheatSheet.html
-    
-    // this one uses an in-memory database.
-    // closing the connection destroys the database.
+  private static Connection connectToDatabase() throws Exception {
+    // create a new database that is stored fully in the memory.
+    // closing the application destroys the database.
     // http://h2database.com/html/features.html#in_memory_databases
-    String connectionUrl = "jdbc:h2:mem:";
+    return DriverManager.getConnection("jdbc:h2:mem:");
 
-    // use this to keep the database on the disk.
-    // choose any location; h2 will create the file.
-    //String connectionUrl = "jdbc:h2:/path/to/database.h2";
-
-    return DriverManager.getConnection(connectionUrl);
+    // ALTERNATIVE: create a new database on the disk (db/sample.db).
+    // data is preserved when the application is restarted.
+    //return DriverManager.getConnection("jdbc:h2:db/sample.db");
   }
 
-  private static void loadInitialData(Connection connection) throws Exception {
-    try (Reader reader = new InputStreamReader(Main.class.getResourceAsStream("/database-setup.sql"), "UTF-8")) {
-      RunScript.execute(connection, reader);
-    }
+  private static InputStreamReader readFromClasspath(String name) throws Exception {
+    ClassLoader cl = Main.class.getClassLoader();
+    return new InputStreamReader(cl.getResourceAsStream(name), "UTF-8");
   }
 }

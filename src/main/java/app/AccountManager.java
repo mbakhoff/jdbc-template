@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AccountManager {
+
   private final Connection connection;
   private final List<CommandHandler> commandHandlers;
 
@@ -20,14 +21,16 @@ public class AccountManager {
     this.commandHandlers = loadCommandHandlers();
   }
 
-  public void run(Scanner console) throws Exception {
-    while (true) {
-      System.out.print("manager > ");
-      String command = console.nextLine();
-      if (command.equals(":q"))
-        break;
-      for (CommandHandler commandHandler : commandHandlers) {
-        commandHandler.handle(connection, command);
+  public void runInteractive() throws Exception {
+    try (Scanner console = new Scanner(System.in)) {
+      while (true) {
+        System.out.print("manager > ");
+        String command = console.nextLine();
+        if (command.equals(":q"))
+          break;
+        for (CommandHandler commandHandler : commandHandlers) {
+          commandHandler.handle(connection, command);
+        }
       }
     }
   }
