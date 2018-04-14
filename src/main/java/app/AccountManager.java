@@ -21,6 +21,16 @@ public class AccountManager {
     this.commandHandlers = loadCommandHandlers();
   }
 
+  private List<CommandHandler> loadCommandHandlers() {
+    return Arrays.asList(
+        new Signup(),
+        new Display(),
+        new Deposit(),
+        new Withdraw(),
+        new Transfer()
+    );
+  }
+
   public void runInteractive() throws Exception {
     try (Scanner console = new Scanner(System.in)) {
       while (true) {
@@ -33,15 +43,5 @@ public class AccountManager {
         }
       }
     }
-  }
-
-  private List<CommandHandler> loadCommandHandlers() {
-    return Arrays.asList(
-        new Signup(),
-        new Display(),
-        new Deposit(),
-        new Withdraw(),
-        new Transfer()
-    );
   }
 }
